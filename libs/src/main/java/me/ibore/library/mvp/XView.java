@@ -12,6 +12,7 @@ import android.support.annotation.StringRes;
  */
 
 public interface XView {
+
     Activity getActivity();
     Context getContext();
 

@@ -1,18 +1,18 @@
 package me.ibore.library.mvp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.annotation.StringRes;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -24,7 +24,7 @@ import butterknife.Unbinder;
  * website: ibore.me
  */
 
-public abstract class XFragment<P extends XPresenter> extends Fragment implements XView, IView {
+public abstract class XDialogFragment<P extends XPresenter> extends DialogFragment implements XView, IView<P> {
 
     protected final String TAG = getClass().getSimpleName();
 
@@ -32,21 +32,12 @@ public abstract class XFragment<P extends XPresenter> extends Fragment implement
 
     private P presenter;
 
-    protected P getPresenter() {
-        return presenter;
-    }
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView =  getLayoutView(inflater, getLayoutId());
+        View rootView = getLayoutView(inflater, getLayoutId());
         unBinder = ButterKnife.bind(this, rootView);
         return rootView;
-    }
-
-    protected View getLayoutView(LayoutInflater inflater, int layoutId) {
-        return inflater.inflate(layoutId, null);
     }
 
     @Override
@@ -60,24 +51,19 @@ public abstract class XFragment<P extends XPresenter> extends Fragment implement
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         presenter.onViewDetached();
         unBinder.unbind();
+        super.onDestroyView();
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public P getPresenter() {
+        return presenter;
     }
 
     @Override
-    public Drawable getDrawableX(@DrawableRes int id) {
-        return ContextCompat.getDrawable(getContext(), id);
-    }
-
-    @Override
-    public int getColorX(@ColorRes int id) {
-        return ContextCompat.getColor(getContext(), id);
+    public View getLayoutView(LayoutInflater inflater, int layoutId) {
+        return inflater.inflate(layoutId, null);
     }
 
     @Override
@@ -93,8 +79,22 @@ public abstract class XFragment<P extends XPresenter> extends Fragment implement
     }
 
     @Override
-    public Context getContext() {
-        return super.getContext();
+    public Drawable getDrawableX(@DrawableRes int id) {
+        return ContextCompat.getDrawable(getContext(), id);
     }
 
+    @Override
+    public int getColorX(@ColorRes int id) {
+        return ContextCompat.getColor(getContext(), id);
+    }
+
+    @Override
+    public void showToast(@StringRes int id) {
+        this.showToast(getString(id));
+    }
+
+    @Override
+    public void showToast(String content) {
+        Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
+    }
 }

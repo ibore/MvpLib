@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -22,31 +25,22 @@ import butterknife.Unbinder;
  * website: ibore.me
  */
 
-public abstract class XActivity<P extends XPresenter> extends AppCompatActivity implements XView, IView {
+public abstract class XActivity<P extends XPresenter> extends AppCompatActivity implements XView, IView<P> {
 
     protected final String TAG = getClass().getSimpleName();
-
     private P presenter;
     private Unbinder unbinder;
-
-    protected P getPresenter() {
-        return presenter;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutView(getLayoutId()));
+        View rootView = getLayoutView(getLayoutInflater(), getLayoutId());
+        setContentView(rootView);
         unbinder = ButterKnife.bind(this);
-        onBindView(savedInstanceState);
+        onBindView(rootView, savedInstanceState);
         presenter = ClassUtil.getClass(this, 0);
         presenter.onViewAttached(this);
         onBindData();
-    }
-
-    @Override
-    public View getLayoutView(int layoutId) {
-        return getLayoutInflater().inflate(layoutId, null);
     }
 
     @Override
@@ -55,6 +49,17 @@ public abstract class XActivity<P extends XPresenter> extends AppCompatActivity 
         presenter.onViewDetached();
         unbinder.unbind();
     }
+
+    @Override
+    public View getLayoutView(LayoutInflater inflater, int layoutId) {
+        return inflater.inflate(layoutId, null);
+    }
+
+    @Override
+    public P getPresenter() {
+        return presenter;
+    }
+
 
     @Override
     public Drawable getDrawableX(@DrawableRes int id) {
@@ -86,6 +91,16 @@ public abstract class XActivity<P extends XPresenter> extends AppCompatActivity 
     @Override
     public Context getContext() {
         return getApplicationContext();
+    }
+
+    @Override
+    public void showToast(@StringRes int id) {
+        this.showToast(getString(id));
+    }
+
+    @Override
+    public void showToast(String content) {
+        Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
     }
 
 }

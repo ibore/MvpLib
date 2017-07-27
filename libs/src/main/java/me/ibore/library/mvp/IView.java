@@ -5,19 +5,22 @@ import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
+import android.view.LayoutInflater;
 import android.view.View;
 
 /**
  * Created by Administrator on 2017/7/26.
  */
+interface IView<P> {
 
-public interface IView {
+    /** 获取Presenter */
+    P getPresenter();
     /** 获取视图ID */
     @LayoutRes int getLayoutId();
     /** 设置视图 */
-    View getLayoutView(int layoutId);
+    View getLayoutView(LayoutInflater inflater, int layoutId);
     /** 绑定视图 */
-    void onBindView(Bundle savedInstanceState);
+    void onBindView(View rootView, Bundle savedInstanceState);
     /** 绑定数据 */
     void onBindData();
     /** 开启Activity */
