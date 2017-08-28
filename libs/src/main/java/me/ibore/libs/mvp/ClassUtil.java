@@ -1,4 +1,4 @@
-package me.ibore.library.mvp;
+package me.ibore.libs.mvp;
 
 import java.lang.reflect.ParameterizedType;
 

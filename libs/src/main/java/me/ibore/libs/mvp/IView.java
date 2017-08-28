@@ -1,4 +1,4 @@
-package me.ibore.library.mvp;
+package me.ibore.libs.mvp;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;

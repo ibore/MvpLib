@@ -1,5 +1,7 @@
-package me.ibore.library.mvp;
+package me.ibore.libs.mvp;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -7,11 +9,10 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
@@ -24,41 +25,29 @@ import butterknife.Unbinder;
  * website: ibore.me
  */
 
-public abstract class XDialogFragment<P extends XPresenter> extends DialogFragment implements XView, IView<P> {
+public abstract class XActivity<P extends XPresenter> extends AppCompatActivity implements XView, IView<P> {
 
     protected final String TAG = getClass().getSimpleName();
-
-    private Unbinder unBinder;
-
     private P presenter;
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = getLayoutView(inflater, getLayoutId());
-        unBinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
+    private Unbinder unbinder;
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        onBindView(view, savedInstanceState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        View rootView = getLayoutView(getLayoutInflater(), getLayoutId());
+        setContentView(rootView);
+        unbinder = ButterKnife.bind(this);
+        onBindView(rootView, savedInstanceState);
         presenter = ClassUtil.getClass(this, 0);
         presenter.onViewAttached(this);
         onBindData();
     }
 
     @Override
-    public void onDestroyView() {
+    protected void onDestroy() {
+        super.onDestroy();
         presenter.onViewDetached();
-        unBinder.unbind();
-        super.onDestroyView();
-    }
-
-    @Override
-    public P getPresenter() {
-        return presenter;
+        unbinder.unbind();
     }
 
     @Override
@@ -67,16 +56,10 @@ public abstract class XDialogFragment<P extends XPresenter> extends DialogFragme
     }
 
     @Override
-    public void openActivity(Class clazz) {
-        openActivity(clazz, null);
+    public P getPresenter() {
+        return presenter;
     }
 
-    @Override
-    public void openActivity(Class clazz, Bundle bundle) {
-        Intent intent = new Intent(getActivity(), clazz);
-        if (bundle != null) intent.putExtras(bundle);
-        startActivity(intent);
-    }
 
     @Override
     public Drawable getDrawableX(@DrawableRes int id) {
@@ -89,6 +72,28 @@ public abstract class XDialogFragment<P extends XPresenter> extends DialogFragme
     }
 
     @Override
+    public void openActivity(Class clazz) {
+        openActivity(clazz, null);
+    }
+
+    @Override
+    public void openActivity(Class clazz, Bundle bundle) {
+        Intent intent = new Intent(this, clazz);
+        if (bundle != null) intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
+    }
+
+    @Override
     public void showToast(@StringRes int id) {
         this.showToast(getString(id));
     }
@@ -97,4 +102,6 @@ public abstract class XDialogFragment<P extends XPresenter> extends DialogFragme
     public void showToast(String content) {
         Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
     }
+
 }
+
