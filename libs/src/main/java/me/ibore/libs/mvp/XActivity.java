@@ -2,18 +2,11 @@ package me.ibore.libs.mvp;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -25,7 +18,7 @@ import butterknife.Unbinder;
  * website: ibore.me
  */
 
-public abstract class XActivity<P extends XPresenter> extends AppCompatActivity implements XView, IView<P> {
+public abstract class XActivity<P extends XPresenter> extends AppCompatActivity implements XView {
 
     protected final String TAG = getClass().getSimpleName();
     private P presenter;
@@ -43,6 +36,16 @@ public abstract class XActivity<P extends XPresenter> extends AppCompatActivity 
         onBindData();
     }
 
+    protected abstract int getLayoutId();
+
+    public View getLayoutView(LayoutInflater inflater, int layoutId) {
+        return inflater.inflate(layoutId, null);
+    }
+
+    protected abstract void onBindView(View rootView, Bundle savedInstanceState);
+
+    protected abstract void onBindData();
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -50,37 +53,8 @@ public abstract class XActivity<P extends XPresenter> extends AppCompatActivity 
         unbinder.unbind();
     }
 
-    @Override
-    public View getLayoutView(LayoutInflater inflater, int layoutId) {
-        return inflater.inflate(layoutId, null);
-    }
-
-    @Override
-    public P getPresenter() {
+    protected P getPresenter() {
         return presenter;
-    }
-
-
-    @Override
-    public Drawable getDrawableX(@DrawableRes int id) {
-        return ContextCompat.getDrawable(getContext(), id);
-    }
-
-    @Override
-    public int getColorX(@ColorRes int id) {
-        return ContextCompat.getColor(getContext(), id);
-    }
-
-    @Override
-    public void openActivity(Class clazz) {
-        openActivity(clazz, null);
-    }
-
-    @Override
-    public void openActivity(Class clazz, Bundle bundle) {
-        Intent intent = new Intent(this, clazz);
-        if (bundle != null) intent.putExtras(bundle);
-        startActivity(intent);
     }
 
     @Override
@@ -91,16 +65,6 @@ public abstract class XActivity<P extends XPresenter> extends AppCompatActivity 
     @Override
     public Context getContext() {
         return getApplicationContext();
-    }
-
-    @Override
-    public void showToast(@StringRes int id) {
-        this.showToast(getString(id));
-    }
-
-    @Override
-    public void showToast(String content) {
-        Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
     }
 
 }

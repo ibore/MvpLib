@@ -2,10 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Library.iml" filepath="$PROJECT_DIR$/Library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MvpLib.iml" filepath="$PROJECT_DIR$/MvpLib.iml" />
+      <module fileurl="file://D:\AndroidProjects\MvpLib\Library.iml" filepath="D:\AndroidProjects\MvpLib\Library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MvpLib.iml" filepath="$PROJECT_DIR$/.idea/MvpLib.iml" />
+      <module fileurl="file://D:\AndroidProjects\MvpLib\MvpLib.iml" filepath="D:\AndroidProjects\MvpLib\MvpLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://D:\AndroidProjects\MvpLib\app\app.iml" filepath="D:\AndroidProjects\MvpLib\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/libs/libs.iml" filepath="$PROJECT_DIR$/libs/libs.iml" />
+      <module fileurl="file://D:\AndroidProjects\MvpLib\libs\libs.iml" filepath="D:\AndroidProjects\MvpLib\libs\libs.iml" />
     </modules>
   </component>
 </project>

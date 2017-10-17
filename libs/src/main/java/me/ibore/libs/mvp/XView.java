@@ -2,7 +2,6 @@ package me.ibore.libs.mvp;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.StringRes;
 
 /**
  * description:
@@ -14,9 +13,7 @@ import android.support.annotation.StringRes;
 public interface XView {
 
     Activity getActivity();
-    Context getContext();
 
-    void showToast(@StringRes int id);
-    void showToast(String content);
+    Context getContext();
 
 }
