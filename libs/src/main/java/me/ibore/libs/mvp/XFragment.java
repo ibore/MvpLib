@@ -48,7 +48,6 @@ public abstract class XFragment extends Fragment implements XView {
 
     protected abstract void onBindData();
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
